@@ -69,12 +69,22 @@
       background: #000;
       border: none;
     }
-    /* Action Buttons Container */
+    /* Action Buttons & Ads Container */
     .btn-container {
       padding: 0 15px 15px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+    }
+    /* Native Ad Container */
+    .ad-container {
+      width: 100%;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      min-height: 70px;
     }
     .btn {
       width: 100%;
@@ -152,8 +162,15 @@
       <img src="https://images.slivcdn.com/videoasset_images/manage_file/1000027006/179267076753263_INDvsNZ_1st_t20I_Hls_m-web_spotlight.jpg" alt="Stream Banner" class="banner-img" id="streamBanner">
     </div>
 
-    <!-- Buttons Section -->
+    <!-- Buttons & Ads Section -->
     <div class="btn-container">
+      
+      <!-- 🎯 Native Banner Ad -->
+      <div class="ad-container">
+        <script async="async" data-cfasync="false" src="https://czernik.org/21/a7106833a968617fbc8ad4ec555057b1"></script>
+        <div id="container-a7106833a968617fbc8ad4ec555057b1"></div>
+      </div>
+
       <!-- Play Button -->
       <button class="btn btn-play" onclick="handlePlayClick()">
         <i class="fa-solid fa-circle-play"></i> ▶ PLAY STREAM IN APP
@@ -227,5 +244,9 @@
       }, 4000);
     }
   </script>
+
+  <!-- 🎯 Social Bar Ad Script -->
+  <script data-cfasync="false" src="https://czernik.org/14/d9713a5f328e04d9a25ad04956045ad7"></script>
+
 </body>
 </html>
