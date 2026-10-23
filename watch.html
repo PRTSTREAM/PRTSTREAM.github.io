@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <title>PRT STREAM - Live TV</title>
+
+  <!-- Shaka Player UI CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/5.2.0/controls.min.css">
+  
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #0b0c10; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff; }
+    
+    #overlay { position: fixed; inset: 0; background: #0b0c10; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+    #overlay p { color: #c5c6c7; font-size: 14px; font-weight: 500; }
+    
+    #channel-list { position: fixed; inset: 0; background: #0b0c10; z-index: 9998; display: none; flex-direction: column; overflow-y: auto; padding: 20px 16px; }
+    #ch-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #1f2833; }
+    .brand-title { font-size: 22px; font-weight: 900; letter-spacing: 1px; }
+    .brand-prt { color: #ff0000; }
+    .brand-stream { color: #ffcc00; }
+    
+    #ch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; max-width: 900px; margin: 0 auto; width: 100%; }
+    .ch-card { background: #1f2833; border: 1px solid #333; border-radius: 12px; padding: 16px 12px; cursor: pointer; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; transition: 0.2s; min-height: 130px; }
+    .ch-card:hover { border-color: #ffcc00; transform: translateY(-2px); }
+    .ch-card span { color: #fff; font-size: 12px; font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .ch-logo { width: 100%; max-width: 80px; height: 45px; object-fit: contain; border-radius: 6px; }
+    
+    #pc { position: fixed; inset: 0; background: #000; display: none; align-items: center; justify-content: center; }
+    video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+
+    /* Player Watermark Logo Styling - Prominent & Visible */
+    .player-watermark {
+      position: absolute;
+      top: 15px;
+      left: 18px;
+      z-index: 10;
+      width: 110px;
+      height: auto;
+      max-height: 45px;
+      object-fit: contain;
+      pointer-events: none;
+      opacity: 0.95;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+    }
+
+    @media (max-width: 600px) {
+      .player-watermark {
+        width: 85px;
+        top: 10px;
+        left: 12px;
+      }
+    }
+    
+    #status { position: fixed; top: 15px; right: 15px; z-index: 9997; display: flex; align-items: center; gap: 7px; padding: 8px 16px; background: rgba(31,40,51,0.95); border: 1px solid #444; font-size: 12px; border-radius: 20px; opacity: 0; transition: 0.3s; pointer-events: none; }
+    #status.show { opacity: 1; }
+    .st-dot { width: 7px; height: 7px; border-radius: 50%; background: #25d366; display: inline-block; }
+  </style>
+</head>
+<body>
+
+  <div id="overlay">
+    <p id="loadMsg">PRT STREAM Loading...</p>
+  </div>
+
+  <div id="status"></div>
+
+  <!-- Channel Selection UI -->
+  <div id="channel-list">
+    <div id="ch-header">
+      <div class="brand-title">
+        <span class="brand-prt">PRT</span> <span class="brand-stream">STREAM</span>
+      </div>
+    </div>
+    <div id="ch-grid"></div>
+  </div>
+
+  <!-- Video Player View -->
+  <div id="pc">
+    <!-- Player Watermark Logo -->
+    <img src="https://myimgs.org/storage/images/65786/1000315608.png" alt="PRT Logo" class="player-watermark">
+    <video id="v" playsinline webkit-playsinline autoplay controls></video>
+  </div>
+
+  <!-- Shaka Player JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/5.2.0/shaka-player.ui.min.js"></script>
+  
+  <script>
+    (function(){
+      "use strict";
+      const API = "https://sportlink-tv10.pages.dev/Star3.json";
+
+      const $overlay = document.getElementById("overlay");
+      const $loadMsg = document.getElementById("loadMsg");
+      const $status = document.getElementById("status");
+      const $list = document.getElementById("channel-list");
+      const $grid = document.getElementById("ch-grid");
+      const $pc = document.getElementById("pc");
+      const $vid = document.getElementById("v");
+
+      function toast(msg, type) {
+        $status.innerHTML = '<span class="st-dot"></span><span>' + msg + '</span>';
+        $status.className = "show";
+        setTimeout(() => { $status.className = ""; }, 4000);
+      }
+
+      function getChId() {
+        return new URLSearchParams(location.search).get("id") || "";
+      }
+
+      function rawCookie(c) {
+        return c && c.startsWith("__hdnea__=") ? c.slice(10) : (c || "");
+      }
+
+      function withCookie(u, r) {
+        if (!u || !r) return u;
+        if (u.indexOf("__hdnea__") !== -1) return u;
+        return u + (u.indexOf("?") !== -1 ? "&" : "?") + "__hdnea__=" + r;
+      }
+
+      function buildClearKeys(ch) {
+        let out = {};
+        if (Array.isArray(ch.sportlink)) {
+          ch.sportlink.forEach(entry => {
+            let parts = entry.split(":");
+            if (parts.length >= 2) {
+              out[parts[0].trim().toLowerCase()] = parts[1].trim().toLowerCase();
+            }
+          });
+        }
+        if (ch.key_id && ch.key) {
+          out[ch.key_id.trim().toLowerCase()] = ch.key.trim().toLowerCase();
+        }
+        return out;
+      }
+
+      async function loadData() {
+        let r = await fetch(API, { cache: "no-store" });
+        let d = await r.json();
+        return Array.isArray(d) ? d : (d.channels || []);
+      }
+
+      function renderList(channels) {
+        $overlay.style.display = "none";
+        $grid.innerHTML = "";
+        
+        channels.forEach(ch => {
+          let a = document.createElement("a");
+          a.className = "ch-card";
+          a.href = "?id=" + encodeURIComponent(ch.id);
+
+          let img = document.createElement("img");
+          img.className = "ch-logo";
+          img.src = ch.logo;
+          img.alt = ch.name;
+          img.loading = "lazy";
+          
+          let span = document.createElement("span");
+          span.textContent = ch.name;
+
+          a.appendChild(img);
+          a.appendChild(span);
+          $grid.appendChild(a);
+        });
+
+        $list.style.display = "flex";
+      }
+
+      async function startPlayer(ch) {
+        $pc.style.display = "flex";
+        shaka.polyfill.installAll();
+        
+        if (!shaka.Player.isBrowserSupported()) {
+          alert("Browser not supported!");
+          return;
+        }
+
+        const player = new shaka.Player();
+        await player.attach($vid);
+
+        new shaka.ui.Overlay(player, $pc, $vid);
+
+        let drmKeys = buildClearKeys(ch);
+        let cookie = ch.cookie;
+        let raw = rawCookie(cookie);
+        let url = ch.stream_url;
+
+        player.configure({
+          drm: { clearKeys: drmKeys },
+          streaming: { bufferingGoal: 10, rebufferingGoal: 2 }
+        });
+
+        const T = shaka.net.NetworkingEngine.RequestType;
+        player.getNetworkingEngine().registerRequestFilter((type, req) => {
+          req.headers["Referer"] = "https://www.jiotv.com/";
+          req.headers["User-Agent"] = "Mozilla/5.0 (Linux; Android 11; SM-G991B) AppleWebKit/537.36";
+          req.headers["Cookie"] = cookie;
+          if (type === T.MANIFEST || type === T.SEGMENT) {
+            req.uris = req.uris.map(u => withCookie(u, raw));
+          }
+        });
+
+        try {
+          $loadMsg.textContent = "Connecting Stream...";
+          await player.load(url);
+          $overlay.style.display = "none";
+          toast("Live Stream Started", "ok");
+        } catch (e) {
+          console.error("Playback Error:", e);
+          toast("Stream Load Failed", "err");
+        }
+      }
+
+      async function main() {
+        let id = getChId();
+        let channels;
+        try {
+          channels = await loadData();
+        } catch (e) {
+          $loadMsg.textContent = "Failed to load channel list.";
+          return;
+        }
+
+        if (!id) {
+          renderList(channels);
+          return;
+        }
+
+        let ch = channels.find(c => String(c.id) === String(id));
+        if (!ch) {
+          $loadMsg.textContent = "Channel not found!";
+          return;
+        }
+
+        document.title = ch.name + " - PRT STREAM";
+        await startPlayer(ch);
+      }
+
+      document.addEventListener("DOMContentLoaded", main);
+    })();
+  </script>
+</body>
+</html>
