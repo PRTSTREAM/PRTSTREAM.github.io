@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRT STREAM - Watch Live Stream</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #0b0c10;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: #1f2833;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      border: 1px solid #333;
+      text-align: center;
+      position: relative;
+    }
+    /* Header Branding */
+    .header {
+      padding: 15px 15px 5px;
+    }
+    .brand-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    .brand-prt {
+      color: #ff0000;
+    }
+    .brand-stream {
+      color: #ffcc00;
+    }
+    .sub-title {
+      font-size: 13px;
+      color: #c5c6c7;
+      margin-top: 3px;
+    }
+    /* Banner & Embed Player Section */
+    .banner-container {
+      width: 100%;
+      padding: 8px 15px;
+    }
+    .banner-img, .embed-player {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid #333;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .embed-player {
+      background: #000;
+      border: none;
+    }
+    /* Action Buttons Container */
+    .btn-container {
+      padding: 0 15px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-play {
+      background: linear-gradient(135deg, #e50914, #b20710);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+    }
+    .btn-play:active {
+      transform: scale(0.98);
+    }
+    .btn-install {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+      display: none; /* Initially Hidden */
+    }
+    .btn-whatsapp {
+      background: #25d366;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    }
+    /* Toast Notification Styling */
+    .toast {
+      visibility: hidden;
+      min-width: 280px;
+      background-color: #ff3333;
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 14px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 14px;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      transition: visibility 0.5s, opacity 0.5s ease-in-out;
+      opacity: 0;
+    }
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="brand-title">
+        <span class="brand-prt">PRT</span> <span class="brand-stream">STREAM</span>
+      </div>
+      <div class="sub-title">Watch Live Sports & Movies in HD</div>
+    </div>
+
+    <!-- Professional Banner / Player Container -->
+    <div class="banner-container" id="mediaContainer">
+      <img src="https://images.slivcdn.com/videoasset_images/manage_file/1000027006/179267076753263_INDvsNZ_1st_t20I_Hls_m-web_spotlight.jpg" alt="Stream Banner" class="banner-img" id="streamBanner">
+    </div>
+
+    <!-- Buttons Section -->
+    <div class="btn-container">
+      <!-- Play Button -->
+      <button class="btn btn-play" onclick="handlePlayClick()">
+        <i class="fa-solid fa-circle-play"></i> ▶ PLAY STREAM IN APP
+      </button>
+
+      <!-- Install App Button -->
+      <a href="https://prtstream.xyz" class="btn btn-install" id="installBtn">
+        <i class="fa-solid fa-download"></i> INSTALL PRT STREAM APP
+      </a>
+
+      <!-- WhatsApp Group Button -->
+      <a href="Https://chat.whatsapp.com/HajzZ6HzPHDJsLswUp8PJD?s=cl&p=a&mlu=4&ilr=4" target="_blank" class="btn btn-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i> JOIN WHATSAPP GROUP
+      </a>
+    </div>
+  </div>
+
+  <!-- Toast Popup Notification -->
+  <div id="toast" class="toast">Aapke paas PRT STREAM App install nahi he!</div>
+
+  <script>
+    function isDesktop() {
+      return !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    }
+
+    function handlePlayClick() {
+      if (isDesktop()) {
+        var container = document.getElementById("mediaContainer");
+        container.innerHTML = '<iframe src="https://tv4wav2.pages.dev/?data7=3" class="embed-player" allowfullscreen="true" frameborder="0"></iframe>';
+      } else {
+        playInMobileApp();
+      }
+    }
+
+    var appCheckTimer = null;
+    var isAppOpened = false;
+
+    function playInMobileApp() {
+      var streamUrl = "https://absibd4qaafyaaayeyibyrizx5sn7.ta.pop-vod-dash.main.amazon.pv-cdn.net/dm/3$0CiEIAioFZW5fRU4wAUgBUgaAwAKB8AN6A4C4F4IBAQGIAQQYAQ/ww_bom/2481/516f/2fec/45f6-a108-59227a0a450d/7288dcd4-af3e-49c5-b810-f84ab71873d6.mpd?|drmScheme=clearkey&drmLicense=f337200afa7240fa8439618f26157864:f1c59aca39c69c12f31af956715be160,d564c59c6e814417b1fe38be1a742c7c:28c5c5bc51df40237987dde1e817ebc6";
+      var customSchemeUrl = "prtstream://play?url=" + encodeURIComponent(streamUrl);
+
+      isAppOpened = false;
+
+      var handleVisibilityChange = function() {
+        if (document.hidden) {
+          isAppOpened = true;
+        }
+      };
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      window.location.href = customSchemeUrl;
+
+      if (appCheckTimer) clearTimeout(appCheckTimer);
+
+      appCheckTimer = setTimeout(function() {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        if (!isAppOpened && !document.hidden) {
+          showToast("Aapke paas PRT STREAM App install nahi he!");
+          document.getElementById("installBtn").style.display = "flex";
+        }
+      }, 1800);
+    }
+
+    function showToast(message) {
+      var toast = document.getElementById("toast");
+      toast.innerText = message;
+      toast.classList.add("show");
+      setTimeout(function() {
+        toast.classList.remove("show");
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
