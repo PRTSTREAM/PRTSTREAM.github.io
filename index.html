@@ -53,10 +53,18 @@
       color: #c5c6c7;
       margin-top: 3px;
     }
-    /* Embed Player Section */
+    /* Banner & Embed Player Section */
     .banner-container {
       width: 100%;
       padding: 8px 15px;
+    }
+    .banner-img {
+      width: 100%;
+      height: 150px; /* Banner ki original height */
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid #333;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
     .embed-player {
       width: 100%;
@@ -73,7 +81,7 @@
         max-width: 720px;
       }
       .embed-player {
-        height: 380px; /* PC par iframe ki height */
+        height: 380px; /* PC par iframe load hone par height badh jayegi taaki kate nahi */
       }
     }
 
@@ -165,9 +173,9 @@
       <div class="sub-title">Watch Live Sports & Movies in HD</div>
     </div>
 
-    <!-- Direct Iframe Player Container -->
+    <!-- Professional Banner / Player Container -->
     <div class="banner-container" id="mediaContainer">
-      <iframe src="https://prtstream.github.io/em.html" class="embed-player" allowfullscreen="true" frameborder="0"></iframe>
+      <img src="https://images.slivcdn.com/videoasset_images/manage_file/1000027058/1792690224910846_indvsnz_2nd_t20i_dated_landscape_thumb.jpg" alt="Stream Banner" class="banner-img" id="streamBanner">
     </div>
 
     <!-- Buttons & Ads Section -->
@@ -179,7 +187,7 @@
         <div id="container-a7106833a968617fbc8ad4ec555057b1"></div>
       </div>
 
-      <!-- Play Button (Pehle jaisa exact kaam karega) -->
+      <!-- Play Button -->
       <button class="btn btn-play" onclick="handlePlayClick()">
         <i class="fa-solid fa-circle-play"></i> ▶ PLAY STREAM IN APP
       </button>
@@ -207,7 +215,7 @@
     function handlePlayClick() {
       if (isDesktop()) {
         var container = document.getElementById("mediaContainer");
-        container.innerHTML = '<iframe src="https://prtstream.github.io/em.html" class="embed-player" allowfullscreen="true" frameborder="0"></iframe>';
+        container.innerHTML = '<iframe src="https://prtstream.github.io/play.html" class="embed-player" allowfullscreen="true" frameborder="0"></iframe>';
       } else {
         playInMobileApp();
       }
