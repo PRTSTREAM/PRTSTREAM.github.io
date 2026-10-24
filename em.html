@@ -28,7 +28,7 @@
 
     .plyr-wrapper {
       width: 100%;
-      height: 100%;
+      max-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -42,11 +42,6 @@
       --plyr-video-control-color: #ff1493; 
       --plyr-video-control-color-hover: #ffcc00; 
       --plyr-video-control-background-hover: rgba(255, 20, 147, 0.25);
-    }
-
-    /* Keep Plyr Controls Visible Above Ads */
-    .plyr__controls {
-      z-index: 2147483647 !important;
     }
 
     video.fit-contain { object-fit: contain !important; }
@@ -70,7 +65,7 @@
       position: absolute !important;
       top: 15px !important;
       left: 15px !important;
-      z-index: 2147483646 !important;
+      z-index: 999999 !important;
       font-size: 15px;
       font-weight: 900;
       letter-spacing: 1.5px;
@@ -89,7 +84,7 @@
       position: absolute !important;
       top: 15px !important;
       right: 15px !important;
-      z-index: 2147483646 !important;
+      z-index: 999999 !important;
       display: flex;
       gap: 8px;
     }
@@ -156,7 +151,7 @@
       border-radius: 8px;
       padding: 12px;
       position: fixed;
-      z-index: 2147483647;
+      z-index: 1000000;
       left: 50%;
       bottom: 30px;
       transform: translateX(-50%);
@@ -238,7 +233,6 @@
       const video = document.getElementById('player');
 
       function addOverlayElements(plyrContainer) {
-        // Watermark Logo
         if (!plyrContainer.querySelector('.watermark-logo')) {
           const logoDiv = document.createElement('div');
           logoDiv.className = 'watermark-logo';
@@ -246,7 +240,6 @@
           plyrContainer.appendChild(logoDiv);
         }
 
-        // Action Buttons
         if (!plyrContainer.querySelector('.action-btn-group')) {
           const btnGroup = document.createElement('div');
           btnGroup.className = 'action-btn-group';
@@ -269,7 +262,6 @@
           plyrContainer.appendChild(btnGroup);
         }
 
-        // Zoom Ratio Button
         const controls = plyrContainer.querySelector('.plyr__controls');
         if (controls && !controls.querySelector('.zoom-btn')) {
           const zoomBtn = document.createElement('button');
@@ -289,24 +281,13 @@
 
           controls.appendChild(zoomBtn);
         }
-
-        // Inject Social Bar Ad inside Plyr element so it displays both normal and fullscreen
-        if (!plyrContainer.querySelector('#ad-script-container')) {
-          const adContainer = document.createElement('div');
-          adContainer.id = 'ad-script-container';
-          const adScript = document.createElement('script');
-          adScript.setAttribute('data-cfasync', 'false');
-          adScript.src = 'https://czernik.org/14/d9713a5f328e04d9a25ad04956045ad7';
-          adContainer.appendChild(adScript);
-          plyrContainer.appendChild(adContainer);
-        }
       }
 
       const plyrControls = ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'speed', 'pip', 'quality', 'settings', 'fullscreen'];
 
       const plyrOptions = {
         controls: plyrControls,
-        fullscreen: { enabled: true, fallback: true, iosNative: true },
+        fullscreen: { enabled: true, fallback: true, iosNative: true }, // Fallback to CSS Fullscreen for Ad Overlay Support
         speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
       };
 
@@ -334,19 +315,6 @@
 
           const player = new Plyr(video, plyrOptions);
 
-          // Auto Landscape Orientation on Fullscreen Mode
-          player.on('enterfullscreen', () => {
-            if (screen.orientation && screen.orientation.lock) {
-              screen.orientation.lock('landscape').catch(() => {});
-            }
-          });
-
-          player.on('exitfullscreen', () => {
-            if (screen.orientation && screen.orientation.unlock) {
-              screen.orientation.unlock();
-            }
-          });
-
           const plyrElement = document.querySelector('.plyr');
           if (plyrElement) addOverlayElements(plyrElement);
 
@@ -358,18 +326,6 @@
       } else {
         video.src = streamUrl;
         const player = new Plyr(video, plyrOptions);
-
-        player.on('enterfullscreen', () => {
-          if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(() => {});
-          }
-        });
-
-        player.on('exitfullscreen', () => {
-          if (screen.orientation && screen.orientation.unlock) {
-            screen.orientation.unlock();
-          }
-        });
         
         const plyrElement = document.querySelector('.plyr');
         if (plyrElement) addOverlayElements(plyrElement);
@@ -381,5 +337,8 @@
       }
     });
   </script>
+
+  <!-- 🎯 Social Bar Ad Script -->
+  <script data-cfasync="false" src="https://czernik.org/14/d9713a5f328e04d9a25ad04956045ad7"></script>
 </body>
 </html>
