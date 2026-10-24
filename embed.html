@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <title>PRT STREAM - Custom Player & Link Generator</title>
+
+  <!-- Shaka Player UI CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@5.2.4/dist/controls.css">
+  
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #0b0c10; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #fff; }
+    
+    #setup-panel { max-width: 600px; margin: 30px auto; background: #1f2833; padding: 25px; border-radius: 14px; border: 1px solid #333; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+    h2 { text-align: center; margin-bottom: 20px; font-size: 20px; color: #ffcc00; letter-spacing: 1px; }
+    .input-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 12px; font-weight: 600; color: #c5c6c7; }
+    input, select { padding: 10px 12px; background: #0b0c10; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px; outline: none; transition: 0.2s; }
+    input:focus, select:focus { border-color: #66fcf1; }
+    
+    .btn-row { display: flex; gap: 10px; margin-top: 15px; }
+    .action-btn { flex: 1; padding: 12px; font-weight: 700; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; transition: 0.2s; }
+    .btn-play { background: #25d366; color: #000; }
+    .btn-play:hover { background: #1ebd59; }
+    .btn-gen { background: #ffcc00; color: #000; }
+    .btn-gen:hover { background: #e6b800; }
+
+    /* Output Box for Share/Embed Link */
+    #output-box { margin-top: 15px; display: none; flex-direction: column; gap: 8px; background: #0b0c10; padding: 12px; border-radius: 8px; border: 1px solid #444; }
+    #output-box textarea { width: 100%; height: 60px; background: #1f2833; border: 1px solid #555; color: #66fcf1; padding: 8px; font-size: 12px; border-radius: 6px; resize: none; }
+    .copy-btn { padding: 8px; background: #38bdf8; color: #000; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+
+    /* Video Player Container */
+    #player-container { position: fixed; inset: 0; background: #000; display: none; align-items: center; justify-content: center; z-index: 9999; }
+    video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+
+    .player-watermark {
+      position: absolute;
+      top: 15px;
+      left: 18px;
+      z-index: 10;
+      width: 110px;
+      height: auto;
+      max-height: 45px;
+      object-fit: contain;
+      pointer-events: none;
+      opacity: 0.95;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Input Form Panel -->
+  <div id="setup-panel">
+    <h2>PRT STREAM - GENERATOR & PLAYER</h2>
+    
+    <div class="input-group">
+      <label>Stream URL (MPD / M3U8):</label>
+      <input type="text" id="in-url" placeholder="https://.../index.mpd">
+    </div>
+
+    <div class="input-group">
+      <label>Cookie / Token:</label>
+      <input type="text" id="in-cookie" placeholder="__hdnea__=st=... ya poori cookie string">
+    </div>
+
+    <div class="input-group">
+      <label>Referer:</label>
+      <input type="text" id="in-referer" value="https://www.jiotv.com/" placeholder="https://www.jiotv.com/">
+    </div>
+
+    <div class="input-group">
+      <label>Origin:</label>
+      <input type="text" id="in-origin" placeholder="https://www.jiotv.com">
+    </div>
+
+    <div class="input-group">
+      <label>DRM License / Keys (Kid:Key - Multikeys supported):</label>
+      <input type="text" id="in-keys" placeholder="c2f0a204c...:6543b1984... , kid2:key2">
+    </div>
+
+    <div class="input-group">
+      <label>DRM Scheme:</label>
+      <select id="in-scheme">
+        <option value="clearkey">clearkey</option>
+        <option value="widevine">widevine</option>
+        <option value="playready">playready</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>User-Agent:</label>
+      <input type="text" id="in-ua" value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36">
+    </div>
+
+    <div class="btn-row">
+      <button class="action-btn btn-gen" id="btn-gen">GENERATE LINK</button>
+      <button class="action-btn btn-play" id="btn-play">START PLAYER</button>
+    </div>
+
+    <!-- Generated Link Output -->
+    <div id="output-box">
+      <label>Shareable Direct Link / Embed URL:</label>
+      <textarea id="out-link" readonly></textarea>
+      <button class="copy-btn" id="btn-copy">Copy Link</button>
+    </div>
+  </div>
+
+  <!-- Video Player View -->
+  <div id="player-container">
+    <img src="https://myimgs.org/storage/images/65786/1000315608.png" alt="PRT Logo" class="player-watermark">
+    <video id="v" playsinline webkit-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="true" preload="auto" autoplay></video>
+  </div>
+
+  <!-- Shaka Player JS -->
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@5.2.4/dist/shaka-player.ui.min.js"></script>
+  
+  <script>
+    (function(){
+      "use strict";
+
+      const $panel = document.getElementById("setup-panel");
+      const $pContainer = document.getElementById("player-container");
+      const $vid = document.getElementById("v");
+      
+      const $inUrl = document.getElementById("in-url");
+      const $inCookie = document.getElementById("in-cookie");
+      const $inReferer = document.getElementById("in-referer");
+      const $inOrigin = document.getElementById("in-origin");
+      const $inKeys = document.getElementById("in-keys");
+      const $inScheme = document.getElementById("in-scheme");
+      const $inUa = document.getElementById("in-ua");
+
+      const $btnPlay = document.getElementById("btn-play");
+      const $btnGen = document.getElementById("btn-gen");
+      const $outputBox = document.getElementById("output-box");
+      const $outLink = document.getElementById("out-link");
+      const $btnCopy = document.getElementById("btn-copy");
+
+      // 1. Page load hote hi check karo ki kya URL mein saved parameters hain?
+      function checkAutoLoad() {
+        const params = new URLSearchParams(window.location.search);
+        let url = params.get("url");
+        if (url) {
+          $inUrl.value = url;
+          $inCookie.value = params.get("cookie") || "";
+          $inReferer.value = params.get("referer") || "https://www.jiotv.com/";
+          $inOrigin.value = params.get("origin") || "";
+          $inKeys.value = params.get("keys") || "";
+          $inScheme.value = params.get("scheme") || "clearkey";
+          $inUa.value = params.get("ua") || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+          
+          // Auto start player if URL exists
+          startPlayerEngine();
+        }
+      }
+
+      // 2. Generate Share Link Button
+      $btnGen.addEventListener("click", () => {
+        let url = $inUrl.value.trim();
+        if (!url) {
+          alert("Pehle Stream URL toh daal bhai!");
+          return;
+        }
+
+        let baseUrl = window.location.origin + window.location.pathname;
+        let queryObj = new URLSearchParams();
+        queryObj.set("url", url);
+        if ($inCookie.value.trim()) queryObj.set("cookie", $inCookie.value.trim());
+        if ($inReferer.value.trim()) queryObj.set("referer", $inReferer.value.trim());
+        if ($inOrigin.value.trim()) queryObj.set("origin", $inOrigin.value.trim());
+        if ($inKeys.value.trim()) queryObj.set("keys", $inKeys.value.trim());
+        if ($inScheme.value) queryObj.set("scheme", $inScheme.value);
+        if ($inUa.value.trim()) queryObj.set("ua", $inUa.value.trim());
+
+        let finalLink = baseUrl + "?" + queryObj.toString();
+        $outLink.value = finalLink;
+        $outputBox.style.display = "flex";
+      });
+
+      // Copy Link Button
+      $btnCopy.addEventListener("click", () => {
+        $outLink.select();
+        document.execCommand("copy");
+        alert("Share Link Copied!");
+      });
+
+      // 3. Play Button Click
+      $btnPlay.addEventListener("click", () => {
+        if (!$inUrl.value.trim()) {
+          alert("Stream URL daalna zaroori hai!");
+          return;
+        }
+        startPlayerEngine();
+      });
+
+      // 4. Core Player Logic
+      async function startPlayerEngine() {
+        let url = $inUrl.value.trim();
+        let cookie = $inCookie.value.trim();
+        let referer = $inReferer.value.trim();
+        let origin = $inOrigin.value.trim();
+        let keysStr = $inKeys.value.trim();
+        let scheme = $inScheme.value;
+        let userAgent = $inUa.value.trim();
+
+        $panel.style.display = "none";
+        $pContainer.style.display = "flex";
+
+        shaka.polyfill.installAll();
+        if (!shaka.Player.isBrowserSupported()) {
+          alert("Browser not supported!");
+          return;
+        }
+
+        const player = new shaka.Player();
+        await player.attach($vid);
+
+        new shaka.ui.Overlay(player, $pContainer, $vid).configure({
+          controlPanelElements:[ "play_pause", "mute", "volume", "time_and_duration", "spacer", "quality", "picture_in_picture", "fullscreen", "overflow_menu" ]
+        });
+
+        // ClearKey Multi-key support
+        let drmConfig = {};
+        if (scheme === "clearkey") {
+          let clearKeys = {};
+          if (keysStr) {
+            let pairs = keysStr.split(/[,;|]/);
+            pairs.forEach(pair => {
+              let parts = pair.split(":");
+              if (parts.length >= 2) {
+                let kid = parts[0].trim().toLowerCase();
+                let k = parts[1].trim().toLowerCase();
+                if (kid && k) clearKeys[kid] = k;
+              }
+            });
+          }
+          drmConfig.clearKeys = clearKeys;
+        }
+
+        player.configure({
+          drm: drmConfig,
+          streaming: { bufferingGoal: 15, rebufferingGoal: 2, stallEnabled: true }
+        });
+
+        let rawToken = "";
+        if (cookie) {
+          rawToken = cookie.startsWith("__hdnea__=") ? cookie.slice(10) : cookie;
+        }
+
+        const T = shaka.net.NetworkingEngine.RequestType;
+        player.getNetworkingEngine().registerRequestFilter((type, req) => {
+          if (referer) req.headers["Referer"] = referer;
+          if (origin) req.headers["Origin"] = origin;
+          if (userAgent) req.headers["User-Agent"] = userAgent;
+          if (cookie) req.headers["Cookie"] = cookie;
+
+          if ((type === T.MANIFEST || type === T.SEGMENT) && rawToken) {
+            if (!req.uris[0].includes("__hdnea__")) {
+              let separator = req.uris[0].includes("?") ? "&" : "?";
+              req.uris = req.uris.map(u => u + separator + "__hdnea__=" + rawToken);
+            }
+          }
+        });
+
+        try {
+          await player.load(url);
+          $vid.muted = false;
+          await $vid.play();
+        } catch (e) {
+          console.error("Playback error:", e);
+          alert("Stream load failed! Check details.");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", checkAutoLoad);
+    })();
+  </script>
+</body>
+</html>
