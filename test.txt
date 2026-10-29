@@ -1,0 +1,88 @@
+#EXTM3U
+#EXTINF:-1 tvg-name="SONY HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_HD.png" group-title="Sony Channels ", SONY HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_hd.m3u8
+
+#EXTINF:-1 tvg-name="SAB HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_SAB_HD.png" group-title="Sony Channels ", SAB HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sab_hd.m3u8
+
+#EXTINF:-1 tvg-name="SONY MARATHI " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Marathi_SD.png" group-title="Sony Channels ", SONY MARATHI 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_marathi.m3u8
+
+#EXTINF:-1 tvg-name="SONY PAL " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Pal.png" group-title="Sony Channels ", SONY PAL 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_pal.m3u8
+
+#EXTINF:-1 tvg-name="SONY AATH " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_aath.png" group-title="Sony Channels ", SONY AATH 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_aath.m3u8
+
+#EXTINF:-1 tvg-name="SONY YAY " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Yay_Hindi.png" group-title="Sony Channels ", SONY YAY 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_yay.m3u8
+
+#EXTINF:-1 tvg-name="SONY MAX HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Max_HD.png" group-title="Sony Channels ", SONY MAX HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_max_hd.m3u8
+
+#EXTINF:-1 tvg-name="SONY MAX " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Max_SD.png" group-title="Sony Channels ", SONY MAX 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_max.m3u8
+
+#EXTINF:-1 tvg-name="SONY WAH " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Wah.png" group-title="Sony Channels ", SONY WAH 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_wah.m3u8
+
+#EXTINF:-1 tvg-name="SONY MAX2 " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_MAX2.png" group-title="Sony Channels ", SONY MAX2 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_max2.m3u8
+
+#EXTINF:-1 tvg-name="SONY PIX HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Pix_HD.png" group-title="Sony Channels ", SONY PIX HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_pix_hd.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 1 HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten_HD.png" group-title="Sony Channels ", SONY TEN 1 HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten1_hd.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 1 " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten_1.png" group-title="Sony Channels ", SONY TEN 1 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten1.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 2 HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten2_HD.png" group-title="Sony Channels ", SONY TEN 2 HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten2_hd.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 2 " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten2_HD.png" group-title="Sony Channels ", SONY TEN 2 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten2.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 3 HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten3_HD.png" group-title="Sony Channels ", SONY TEN 3 HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten3_hd.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 3 " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten3_HD.png" group-title="Sony Channels ", SONY TEN 3 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten3.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 4 HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten_4_HD_Telugu.png" group-title="Sony Channels ", SONY TEN 4 HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten4_hd.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 4 " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten_4_Telugu.png" group-title="Sony Channels ", SONY TEN 4 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten4.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 5 HD " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Six_HD.png" group-title="Sony Channels ", SONY TEN 5 HD 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten5_hd.m3u8
+
+#EXTINF:-1 tvg-name="SONY TEN 5 " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Six_HD.png" group-title="Sony Channels ", SONY TEN 5 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/sony_ten5.m3u8
+
+#EXTINF:-1 tvg-name="BBC EARTH " tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_BBC_Earth_HD.png" group-title="Sony Channels ", BBC EARTH 
+#EXTVLCOPT:http-referrer=https://allinonereborn2.online
+https://allinonereborn2.online/sony-new/playlists/bbc_earth.m3u8
