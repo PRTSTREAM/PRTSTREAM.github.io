@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRT STREAM - Watch Live Stream</title>
+  
+  <!-- 🎯 Adsterra / Direct Popunder Script -->
+  <script data-cfasync="false" src="https://capitalhospitals.org/1/2883eadc57e94006c1113364d2e1c9c3"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #0b0c10;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: #1f2833;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      border: 1px solid #333;
+      text-align: center;
+      position: relative;
+      transition: max-width 0.3s ease;
+    }
+    /* Header Branding */
+    .header {
+      padding: 15px 15px 5px;
+    }
+    .brand-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    .brand-prt {
+      color: #ff0000;
+    }
+    .brand-stream {
+      color: #ffcc00;
+    }
+    .sub-title {
+      font-size: 13px;
+      color: #c5c6c7;
+      margin-top: 3px;
+    }
+    /* Banner & Embed Player Section */
+    .banner-container {
+      width: 100%;
+      padding: 8px 15px;
+    }
+    .banner-img {
+      width: 100%;
+      height: 150px; /* Banner ki original height */
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid #333;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .embed-player {
+      width: 100%;
+      height: 240px; /* Mobile ke liye iframe height */
+      background: #000;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    /* PC / Desktop ke liye size aur iframe height adjustment */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 720px;
+      }
+      .embed-player {
+        height: 380px; /* PC par iframe load hone par height badh jayegi taaki kate nahi */
+      }
+    }
+
+    /* Action Buttons & Ads Container */
+    .btn-container {
+      padding: 0 15px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    /* Native Ad Container */
+    .ad-container {
+      width: 100%;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      min-height: 70px;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-play {
+      background: linear-gradient(135deg, #e50914, #b20710);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+    }
+    .btn-play:active {
+      transform: scale(0.98);
+    }
+    .btn-install {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+      display: none;
+    }
+    .btn-whatsapp {
+      background: #25d366;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    }
+    /* Toast Notification Styling */
+    .toast {
+      visibility: hidden;
+      min-width: 280px;
+      background-color: #ff3333;
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 14px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 14px;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      transition: visibility 0.5s, opacity 0.5s ease-in-out;
+      opacity: 0;
+    }
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="brand-title">
+        <span class="brand-prt">PRT</span> <span class="brand-stream">STREAM</span>
+      </div>
+      <div class="sub-title">Watch Live Sports & Movies in HD</div>
+    </div>
+
+    <!-- Professional Banner / Player Container -->
+    <div class="banner-container" id="mediaContainer">
+      <img src="https://iili.io/nSHF20G.jpg" alt="Stream Banner" class="banner-img" id="streamBanner">
+    </div>
+
+    <!-- Buttons & Ads Section -->
+    <div class="btn-container">
+      
+      <!-- 🎯 Native Banner Ad -->
+      <div class="ad-container">
+        <script async="async" data-cfasync="false" src="https://czernik.org/21/a7106833a968617fbc8ad4ec555057b1"></script>
+        <div id="container-a7106833a968617fbc8ad4ec555057b1"></div>
+      </div>
+
+      <!-- Play Button -->
+      <button class="btn btn-play" onclick="handlePlayClick()">
+        <i class="fa-solid fa-circle-play"></i> ▶ PLAY STREAM IN APP
+      </button>
+
+      <!-- Install App Button -->
+      <a href="https://prtstream.xyz" class="btn btn-install" id="installBtn">
+        <i class="fa-solid fa-download"></i> INSTALL PRT STREAM APP
+      </a>
+
+      <!-- WhatsApp Group Button -->
+      <a href="Https://chat.whatsapp.com/HajzZ6HzPHDJsLswUp8PJD?s=cl&p=a&mlu=4&ilr=4" target="_blank" class="btn btn-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i> JOIN WHATSAPP GROUP
+      </a>
+    </div>
+  </div>
+
+  <!-- Toast Popup Notification -->
+  <div id="toast" class="toast">Aapke paas PRT STREAM App install nahi he!</div>
+
+  <script>
+    function isDesktop() {
+      return !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    }
+
+    function handlePlayClick() {
+      if (isDesktop()) {
+        var container = document.getElementById("mediaContainer");
+        container.innerHTML = '<iframe src="https://prtstream.github.io/embed.html?url=https%3A%2F%2Fvk10.lovable.app%2Fapi%2Fpublic%2Fproxy%3Fu%3Dhttps%3A%2F%2Fdishmt.slivcdn.com%2Fhls%2Flive%2F2020434%2FTEN2HD%2Fmaster.m3u8%3Fhdnea%3Dexp%3D1793375873%7Eacl%3D*%7Eid%3D1556784484fancode%7Ehmac%3D4471552a8b24ec7defb1ca783ebcbbb485cbc20a93825d81f9ba439af34a7334&referer=https%3A%2F%2Fwww.jiotv.com%2F&scheme=clearkey&ua=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F124.0.0.0+Safari%2F537.36" allowfullscreen="true" frameborder="0"></iframe>';
+      } else {
+        playInMobileApp();
+      }
+    }
+
+    var appCheckTimer = null;
+    var isAppOpened = false;
+
+    function playInMobileApp() {
+      var streamUrl = "https://dishmt.slivcdn.com/hls/live/2020434/TEN2HD/master.m3u8?hdnea=exp=1793375873~acl=*~id=1556784484fancode~hmac=4471552a8b24ec7defb1ca783ebcbbb485cbc20a93825d81f9ba439af34a7334";
+      var customSchemeUrl = "prtstream://play?url=" + encodeURIComponent(streamUrl);
+
+      isAppOpened = false;
+
+      var handleVisibilityChange = function() {
+        if (document.hidden) {
+          isAppOpened = true;
+        }
+      };
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      window.location.href = customSchemeUrl;
+
+      if (appCheckTimer) clearTimeout(appCheckTimer);
+
+      appCheckTimer = setTimeout(function() {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        if (!isAppOpened && !document.hidden) {
+          showToast("Aapke paas PRT STREAM App install nahi he!");
+          document.getElementById("installBtn").style.display = "flex";
+        }
+      }, 1800);
+    }
+
+    function showToast(message) {
+      var toast = document.getElementById("toast");
+      toast.innerText = message;
+      toast.classList.add("show");
+      setTimeout(function() {
+        toast.classList.remove("show");
+      }, 4000);
+    }
+  </script>
+
+</body>
+</html>
