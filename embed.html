@@ -49,6 +49,24 @@
       opacity: 0.95;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
     }
+
+    /* Custom Replay/Play Overlay Button */
+    #custom-overlay-btn {
+      position: absolute;
+      z-index: 20;
+      padding: 14px 28px;
+      background: #25d366;
+      color: #000;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: 0.2s;
+    }
+    #custom-overlay-btn:hover { background: #1ebd59; transform: scale(1.05); }
   </style>
 </head>
 <body>
@@ -112,6 +130,7 @@
   <!-- Video Player View -->
   <div id="player-container">
     <img src="https://myimgs.org/storage/images/65786/1000315608.png" alt="PRT Logo" class="player-watermark">
+    <button id="custom-overlay-btn">▶ PLAY / REPLAY</button>
     <video id="v" playsinline webkit-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="true" preload="auto" autoplay></video>
   </div>
 
@@ -125,6 +144,7 @@
       const $panel = document.getElementById("setup-panel");
       const $pContainer = document.getElementById("player-container");
       const $vid = document.getElementById("v");
+      const $overlayBtn = document.getElementById("custom-overlay-btn");
       
       const $inUrl = document.getElementById("in-url");
       const $inCookie = document.getElementById("in-cookie");
@@ -140,6 +160,8 @@
       const $outLink = document.getElementById("out-link");
       const $btnCopy = document.getElementById("btn-copy");
 
+      let activePlayer = null;
+
       // 1. Page load hote hi check karo ki kya URL mein saved parameters hain?
       function checkAutoLoad() {
         const params = new URLSearchParams(window.location.search);
@@ -153,7 +175,6 @@
           $inScheme.value = params.get("scheme") || "clearkey";
           $inUa.value = params.get("ua") || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
           
-          // Auto start player if URL exists
           startPlayerEngine();
         }
       }
@@ -197,6 +218,29 @@
         startPlayerEngine();
       });
 
+      // Overlay Play/Replay Button Click handler
+      $overlayBtn.addEventListener("click", async () => {
+        $overlayBtn.style.display = "none";
+        try {
+          $vid.muted = false;
+          await $vid.play();
+        } catch(err) {
+          console.error("Play error:", err);
+        }
+      });
+
+      // Track video pause/playing state to show/hide replay button smoothly
+      $vid.addEventListener("pause", () => {
+        if (!$vid.ended && $vid.currentTime > 0) {
+          $overlayBtn.innerText = "▶ RESUME / PLAY";
+          $overlayBtn.style.display = "block";
+        }
+      });
+
+      $vid.addEventListener("playing", () => {
+        $overlayBtn.style.display = "none";
+      });
+
       // 4. Core Player Logic
       async function startPlayerEngine() {
         let url = $inUrl.value.trim();
@@ -217,6 +261,7 @@
         }
 
         const player = new shaka.Player();
+        activePlayer = player;
         await player.attach($vid);
 
         new shaka.ui.Overlay(player, $pContainer, $vid).configure({
@@ -241,9 +286,15 @@
           drmConfig.clearKeys = clearKeys;
         }
 
+        // Smooth streaming configuration (Reduce buffering/lag)
         player.configure({
           drm: drmConfig,
-          streaming: { bufferingGoal: 15, rebufferingGoal: 2, stallEnabled: true }
+          streaming: { 
+            bufferingGoal: 30, 
+            rebufferingGoal: 4, 
+            stallEnabled: true,
+            jumpLargeGaps: true 
+          }
         });
 
         let rawToken = "";
@@ -270,9 +321,14 @@
           await player.load(url);
           $vid.muted = false;
           await $vid.play();
+          $overlayBtn.style.display = "none";
         } catch (e) {
-          console.error("Playback error:", e);
-          alert("Stream load failed! Check details.");
+          console.error("Playback load notice:", e);
+          // Popup hata diya gaya hai, agar load mein delay ho toh Play/Replay button show kar do
+          if ($vid.paused) {
+            $overlayBtn.innerText = "▶ REPLAY STREAM";
+            $overlayBtn.style.display = "block";
+          }
         }
       }
 
