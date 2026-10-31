@@ -14,155 +14,253 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
     body {
-      background-color: #0b0c10;
+      background: radial-gradient(circle at center, #141721 0%, #08090d 100%);
       color: #ffffff;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 10px;
+      padding: 15px;
     }
     .container {
       width: 100%;
       max-width: 480px;
-      background: #1f2833;
-      border-radius: 16px;
+      background: rgba(26, 32, 44, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      border: 1px solid #333;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(229, 9, 20, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       text-align: center;
       position: relative;
       transition: max-width 0.3s ease;
     }
+    
     /* Header Branding */
     .header {
-      padding: 15px 15px 5px;
+      padding: 20px 15px 10px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+    
+    /* Top Left WhatsApp Icon Button */
+    .whatsapp-icon-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(37, 211, 102, 0.1);
+      border: 1px solid rgba(37, 211, 102, 0.3);
+      color: #22c55e;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .whatsapp-icon-btn:hover {
+      background: rgba(34, 197, 94, 0.25);
+      transform: scale(1.05);
+    }
+
+    /* Top Right Share Icon Button */
+    .share-icon-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #38bdf8;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .share-icon-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      transform: scale(1.05);
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 0, 0, 0.15);
+      color: #ff3333;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(255, 0, 0, 0.3);
+    }
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background-color: #ff0000;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 0, 0, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+    }
+
     .brand-title {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 900;
       letter-spacing: 1px;
     }
     .brand-prt {
-      color: #ff0000;
+      color: #ff3333;
     }
     .brand-stream {
       color: #ffcc00;
     }
     .sub-title {
       font-size: 13px;
-      color: #c5c6c7;
-      margin-top: 3px;
+      color: #94a3b8;
+      margin-top: 4px;
     }
+
     /* Banner & Embed Player Section */
     .banner-container {
       width: 100%;
-      padding: 8px 15px;
+      padding: 10px 18px;
     }
     .banner-img {
       width: 100%;
-      height: 150px; /* Banner ki original height */
+      height: 180px;
       object-fit: cover;
-      border-radius: 12px;
-      border: 2px solid #333;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      background-color: #000;
     }
     .embed-player {
       width: 100%;
-      height: 240px; /* Mobile ke liye iframe height */
+      height: 250px;
       background: #000;
       border: none;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
     }
 
-    /* PC / Desktop ke liye size aur iframe height adjustment */
+    /* PC / Desktop Media Query */
     @media (min-width: 768px) {
       .container {
-        max-width: 720px;
+        max-width: 750px;
       }
       .embed-player {
-        height: 380px; /* PC par iframe load hone par height badh jayegi taaki kate nahi */
+        height: 420px;
+      }
+      .btn-play-container {
+        display: none !important;
       }
     }
 
     /* Action Buttons & Ads Container */
     .btn-container {
-      padding: 0 15px 15px;
+      padding: 0 18px 20px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
+    
     /* Native Ad Container */
     .ad-container {
       width: 100%;
-      margin-bottom: 5px;
+      margin-bottom: 2px;
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 8px;
+      border-radius: 10px;
       min-height: 70px;
+      overflow: hidden;
     }
+
     .btn {
       width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: bold;
+      padding: 15px;
+      font-size: 15px;
+      font-weight: 700;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       text-decoration: none;
-      transition: all 0.2s ease-in-out;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    .btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
     .btn-play {
-      background: linear-gradient(135deg, #e50914, #b20710);
+      background: linear-gradient(135deg, #ff1e2a, #c50510);
       color: #ffffff;
-      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
-    }
-    .btn-play:active {
-      transform: scale(0.98);
+      box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
     }
     .btn-install {
-      background: linear-gradient(135deg, #007bff, #0056b3);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #ffffff;
-      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
       display: none;
     }
     .btn-whatsapp {
-      background: #25d366;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #ffffff;
-      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
     }
+
     /* Toast Notification Styling */
     .toast {
       visibility: hidden;
-      min-width: 280px;
-      background-color: #ff3333;
+      min-width: 290px;
+      background-color: #ef4444;
       color: #fff;
       text-align: center;
-      border-radius: 8px;
-      padding: 14px;
+      border-radius: 10px;
+      padding: 14px 18px;
       position: fixed;
       z-index: 1000;
       left: 50%;
-      bottom: 30px;
-      transform: translateX(-50%);
+      bottom: 25px;
+      transform: translateX(-50%) translateY(20px);
       font-size: 14px;
-      font-weight: bold;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      transition: visibility 0.5s, opacity 0.5s ease-in-out;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       opacity: 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     .toast.show {
       visibility: visible;
       opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
@@ -171,10 +269,23 @@
   <div class="container">
     <!-- Header -->
     <div class="header">
+      <!-- Top Left WhatsApp Group Icon -->
+      <a href="https://chat.whatsapp.com/HajzZ6HzPHDJsLswUp8PJD?s=cl&p=a&mlu=4&ilr=4" target="_blank" class="whatsapp-icon-btn" title="Join WhatsApp Group">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+
+      <!-- Top Right Share Icon -->
+      <a href="javascript:void(0);" class="share-icon-btn" onclick="shareOnWhatsApp()" title="Share on WhatsApp">
+        <i class="fa-solid fa-share-nodes"></i>
+      </a>
+
+      <div class="live-badge">
+        <span class="live-dot"></span> LIVE STREAM
+      </div>
       <div class="brand-title">
         <span class="brand-prt">PRT</span> <span class="brand-stream">STREAM</span>
       </div>
-      <div class="sub-title">Watch Live Sports & Movies in HD</div>
+      <div class="sub-title">Watch Live Sports & Movies in High Definition</div>
     </div>
 
     <!-- Professional Banner / Player Container -->
@@ -192,9 +303,11 @@
       </div>
 
       <!-- Play Button -->
-      <button class="btn btn-play" onclick="handlePlayClick()">
-        <i class="fa-solid fa-circle-play"></i> ▶ PLAY STREAM IN APP
-      </button>
+      <div class="btn-play-container" style="width: 100%;">
+        <button class="btn btn-play" onclick="handlePlayClick()">
+          <i class="fa-solid fa-circle-play" style="font-size: 18px;"></i> PLAY STREAM IN APP
+        </button>
+      </div>
 
       <!-- Install App Button -->
       <a href="https://prtstream.xyz" class="btn btn-install" id="installBtn">
@@ -202,8 +315,8 @@
       </a>
 
       <!-- WhatsApp Group Button -->
-      <a href="Https://chat.whatsapp.com/HajzZ6HzPHDJsLswUp8PJD?s=cl&p=a&mlu=4&ilr=4" target="_blank" class="btn btn-whatsapp">
-        <i class="fa-brands fa-whatsapp"></i> JOIN WHATSAPP GROUP
+      <a href="https://chat.whatsapp.com/HajzZ6HzPHDJsLswUp8PJD?s=cl&p=a&mlu=4&ilr=4" target="_blank" class="btn btn-whatsapp">
+        <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> JOIN WHATSAPP GROUP
       </a>
     </div>
   </div>
@@ -216,13 +329,27 @@
       return !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     }
 
+    window.addEventListener("DOMContentLoaded", function() {
+      if (isDesktop()) {
+        var container = document.getElementById("mediaContainer");
+        container.innerHTML = '<iframe class="embed-player" src="https://prtstream.github.io/embed.html?url=https%3A%2F%2Famg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv%2Fplaylist%2Famg01269-willowtvfast-willowplus-sportstribalemea%2Fplaylist.m3u8" allowfullscreen="true" frameborder="0"></iframe>';
+      }
+    });
+
     function handlePlayClick() {
       if (isDesktop()) {
         var container = document.getElementById("mediaContainer");
-        container.innerHTML = '<iframe src="https://prtstream.github.io/embed.html?url=https%3A%2F%2Famg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv%2Fplaylist%2Famg01269-willowtvfast-willowplus-sportstribalemea%2Fplaylist.m3u8" allowfullscreen="true" frameborder="0"></iframe>';
+        container.innerHTML = '<iframe class="embed-player" src="https://prtstream.github.io/embed.html?url=https%3A%2F%2Famg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv%2Fplaylist%2Famg01269-willowtvfast-willowplus-sportstribalemea%2Fplaylist.m3u8" allowfullscreen="true" frameborder="0"></iframe>';
       } else {
         playInMobileApp();
       }
+    }
+
+    /* WhatsApp Direct Share Function */
+    function shareOnWhatsApp() {
+      var message = "Is website aap daily cricket live matches dekh sakte free me: " + window.location.href;
+      var whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(message);
+      window.open(whatsappUrl, '_blank');
     }
 
     var appCheckTimer = null;
